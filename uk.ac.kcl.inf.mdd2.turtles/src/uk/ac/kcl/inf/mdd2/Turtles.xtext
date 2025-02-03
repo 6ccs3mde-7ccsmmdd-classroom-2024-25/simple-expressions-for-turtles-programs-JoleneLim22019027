@@ -21,13 +21,13 @@ VariableDeclaration:
 ;
 
 LoopStatement:
-	count = IntExpression "times" "do"
+	count = Addition "times" "do"
 	  statements += Statement+
 	"end"
 ;
 
 MoveStatement:
-	command = MoveCommand "(" steps = IntExpression ")"
+	command = MoveCommand "(" steps = Addition ")"
 ;
 
 enum MoveCommand:
@@ -42,10 +42,25 @@ enum TurnCommand:
 	left | right
 ;
 
-IntExpression:
-	val = INT |
-	var = [VariableDeclaration]
+Primary returns IntExpression:
+	IntLiteral |
+	VariableDeclaration |
+	'(' Addition ')'
 ;
+
+Addition returns IntExpression:
+    Multiplication ({Addition.left = current} '+' right += Multiplication)*
+;
+
+Multiplication returns IntExpression:
+    Primary ({Multiplication.left = current} '*' right += Primary)*
+;
+
+IntLiteral:
+    val = INT;
+
+VariableReference:
+    val = VariableDeclaration;
 
 REAL returns ecore::EFloat hidden():
 	INT? "." INT
