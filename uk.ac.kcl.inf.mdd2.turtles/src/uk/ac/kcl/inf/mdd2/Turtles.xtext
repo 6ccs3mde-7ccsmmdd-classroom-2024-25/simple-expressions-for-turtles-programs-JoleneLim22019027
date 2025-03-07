@@ -44,7 +44,7 @@ enum TurnCommand:
 
 Primary returns IntExpression:
 	IntLiteral |
-	VariableDeclaration |
+	IntVarExpression |
 	'(' Addition ')'
 ;
 
@@ -59,8 +59,9 @@ Multiplication returns IntExpression:
 IntLiteral:
     val = INT;
 
-VariableReference:
-    val = VariableDeclaration;
+IntVarExpression:
+	var = [VariableDeclaration]
+;
 
 REAL returns ecore::EFloat hidden():
 	INT? "." INT
